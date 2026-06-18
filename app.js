@@ -12,7 +12,7 @@ function showPage(name) {
 navBtns.forEach(btn => btn.addEventListener('click', () => showPage(btn.dataset.page)));
 
 // Hero CTA
-document.querySelector('.cta-btn').addEventListener('click', () => showPage('players'));
+document.querySelector('.cta-btn').addEventListener('click', () => showPage('schedule'));
 
 // ---- TEAMS ----
 function flagImg(t) {
@@ -48,11 +48,12 @@ function renderTeams(list) {
     <div class="team-group-section">
       <div class="team-group-label">Group ${g}</div>
       <div class="team-group-cards">
-        ${groups[g].map(t => `
+        ${groups[g].sort((a,b) => (a.fifaRank||99) - (b.fifaRank||99)).map(t => `
           <div class="team-card">
             <div class="t-flag-wrap">${flagImg(t)}</div>
             <div class="t-name">${t.name}</div>
             <div class="t-conf">${t.confederation}</div>
+            <div class="t-fifa-rank">FIFA #${t.fifaRank ?? '—'}</div>
           </div>`).join('')}
       </div>
     </div>`).join('');
@@ -231,6 +232,177 @@ renderPlayers(PLAYERS);
 document.getElementById('player-search').addEventListener('input', filterPlayers);
 document.getElementById('pos-filter').addEventListener('change', filterPlayers);
 teamFilter.addEventListener('change', filterPlayers);
+
+// ---- FANTASY ----
+(function() {
+  const FORMATIONS = {
+    '4-3-3': [['GK'],['DEF','DEF','DEF','DEF'],['MID','MID','MID'],['FWD','FWD','FWD']],
+    '4-4-2': [['GK'],['DEF','DEF','DEF','DEF'],['MID','MID','MID','MID'],['FWD','FWD']],
+    '3-5-2': [['GK'],['DEF','DEF','DEF'],['MID','MID','MID','MID','MID'],['FWD','FWD']],
+    '4-2-4': [['GK'],['DEF','DEF','DEF','DEF'],['MID','MID'],['FWD','FWD','FWD','FWD']],
+  };
+
+  let lineup = {};      // slotId → player
+  let activeSlot = null;
+  let formation = '4-3-3';
+
+  function slotId(row, col) { return `s${row}_${col}`; }
+
+  function renderPitch() {
+    const rows = FORMATIONS[formation];
+    const pitch = document.getElementById('fantasy-pitch');
+    pitch.innerHTML = rows.map((row, ri) => `
+      <div class="pitch-row">
+        ${row.map((pos, ci) => {
+          const id = slotId(ri, ci);
+          const p = lineup[id];
+          const isActive = activeSlot === id;
+          return `
+            <div class="pitch-slot" data-slot="${id}" data-pos="${pos}">
+              <div class="slot-circle ${p ? 'filled' : ''} ${isActive ? 'active-slot' : ''}">
+                ${p
+                  ? `<span style="font-size:1.6rem">${p.image}</span>`
+                  : `<span style="font-size:0.7rem;color:rgba(255,255,255,0.4)">${pos}</span>`}
+              </div>
+              <div class="slot-name">${p ? p.name.split(' ').slice(-1)[0] : '—'}</div>
+              <div class="slot-pos-badge">${pos}</div>
+            </div>`;
+        }).join('')}
+      </div>`).join('');
+
+    // Load real photos into filled slots
+    pitch.querySelectorAll('.pitch-slot').forEach(el => {
+      const id = el.dataset.slot;
+      const p = lineup[id];
+      if (p && photoCache[p.id]) {
+        const circle = el.querySelector('.slot-circle');
+        circle.innerHTML = `<img src="${photoCache[p.id]}" alt="${p.name}" />`;
+      } else if (p) {
+        loadCardPhoto(p.id, p.name).then?.(() => {
+          if (photoCache[p.id]) {
+            const circle = el.querySelector('.slot-circle');
+            if (circle) circle.innerHTML = `<img src="${photoCache[p.id]}" alt="${p.name}" />`;
+          }
+        });
+      }
+      el.addEventListener('click', () => onSlotClick(id, el.dataset.pos));
+    });
+
+    updateOverall();
+  }
+
+  function onSlotClick(id, pos) {
+    activeSlot = activeSlot === id ? null : id;
+    renderPitch();
+    renderPool(document.querySelector('.pool-tab.active')?.dataset.pos || pos);
+    // Switch pool tab to match slot position
+    document.querySelectorAll('.pool-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.pos === pos);
+    });
+    renderPool(pos);
+  }
+
+  function renderPool(pos) {
+    const list = document.getElementById('pool-list');
+    const usedIds = new Set(Object.values(lineup).map(p => p.id));
+    const players = PLAYERS.filter(p => p.position === pos);
+
+    if (!players.length) {
+      list.innerHTML = `<div class="pool-empty">No ${pos} players in squad data.</div>`;
+      return;
+    }
+
+    list.innerHTML = players.map(p => {
+      const isSelected = usedIds.has(p.id);
+      const isActive = activeSlot && lineup[activeSlot]?.id === p.id;
+      const avatarSrc = photoCache[p.id];
+      return `
+        <div class="pool-player ${isSelected ? 'selected' : ''} ${isActive ? 'pool-active' : ''}" data-pid="${p.id}">
+          <div class="pool-avatar">
+            ${avatarSrc
+              ? `<img src="${avatarSrc}" alt="${p.name}" />`
+              : `<span>${p.image}</span>`}
+          </div>
+          <div class="pool-info">
+            <div class="pool-pname">${p.name}</div>
+            <div class="pool-pteam">${p.teamFlag} ${p.team}</div>
+          </div>
+          <div class="pool-rating">${p.rating}</div>
+        </div>`;
+    }).join('');
+
+    list.querySelectorAll('.pool-player:not(.selected)').forEach(el => {
+      el.addEventListener('click', () => {
+        if (!activeSlot) return;
+        const p = PLAYERS.find(p => p.id === +el.dataset.pid);
+        if (!p) return;
+        // Remove player from any other slot first
+        Object.keys(lineup).forEach(k => { if (lineup[k]?.id === p.id) delete lineup[k]; });
+        lineup[activeSlot] = p;
+        activeSlot = null;
+        renderPitch();
+        renderPool(pos);
+      });
+    });
+  }
+
+  function updateOverall() {
+    const players = Object.values(lineup);
+    const el = document.getElementById('fantasy-overall');
+    if (!players.length) { el.textContent = '—'; return; }
+    const avg = Math.round(players.reduce((s, p) => s + p.rating, 0) / players.length);
+    el.textContent = avg;
+  }
+
+  // Pool tabs
+  document.getElementById('pool-tabs').addEventListener('click', e => {
+    const tab = e.target.closest('.pool-tab');
+    if (!tab) return;
+    document.querySelectorAll('.pool-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderPool(tab.dataset.pos);
+  });
+
+  // Formation change
+  document.getElementById('fantasy-formation').addEventListener('change', e => {
+    formation = e.target.value;
+    lineup = {};
+    activeSlot = null;
+    renderPitch();
+    renderPool(document.querySelector('.pool-tab.active')?.dataset.pos || 'GK');
+  });
+
+  // Reset
+  document.getElementById('fantasy-reset').addEventListener('click', () => {
+    lineup = {};
+    activeSlot = null;
+    renderPitch();
+    renderPool(document.querySelector('.pool-tab.active')?.dataset.pos || 'GK');
+  });
+
+  // Share / Copy
+  document.getElementById('fantasy-share').addEventListener('click', () => {
+    const name = document.getElementById('fantasy-team-name').value || 'My Fantasy XI';
+    const rows = FORMATIONS[formation];
+    const rowLabels = ['GK','DEF','MID','FWD'];
+    let text = `🏆 ${name} (${formation})\n`;
+    text += `⭐ Overall: ${document.getElementById('fantasy-overall').textContent}\n\n`;
+    rows.forEach((row, ri) => {
+      const players = row.map((_, ci) => lineup[slotId(ri, ci)]?.name || '?').join(', ');
+      text += `${rowLabels[ri] || row[0]}: ${players}\n`;
+    });
+    text += '\nBuilt with FIFA WC 2026 App 🌍';
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('fantasy-share');
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => { btn.textContent = '📋 Copy Lineup'; }, 2000);
+    });
+  });
+
+  // Init
+  renderPitch();
+  renderPool('GK');
+})();
 
 // ---- SCHEDULE ----
 (function() {
@@ -535,24 +707,3 @@ teamFilter.addEventListener('change', filterPlayers);
   });
 })();
 
-// ---- GROUPS ----
-const groups = {};
-TEAMS.forEach(t => {
-  if (!groups[t.group]) groups[t.group] = [];
-  groups[t.group].push(t);
-});
-
-const gc = document.getElementById('groups-container');
-Object.keys(groups).sort().forEach(g => {
-  const div = document.createElement('div');
-  div.className = 'group-card';
-  div.innerHTML = `
-    <div class="group-header">Group ${g}</div>
-    ${groups[g].map(t => `
-      <div class="group-team">
-        <span class="gt-flag">${t.flag}</span>
-        <span class="gt-name">${t.name}</span>
-        <span class="gt-conf">${t.confederation}</span>
-      </div>`).join('')}`;
-  gc.appendChild(div);
-});

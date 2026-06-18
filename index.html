@@ -17,9 +17,9 @@
       <button class="nav-btn active" data-page="home">Home</button>
       <button class="nav-btn" data-page="teams">Teams</button>
       <button class="nav-btn" data-page="players">Players</button>
-      <button class="nav-btn" data-page="groups">Groups</button>
       <button class="nav-btn" data-page="bracket">🏆 Bracket</button>
       <button class="nav-btn" data-page="schedule">📅 Schedule</button>
+      <button class="nav-btn" data-page="fantasy">⚽ Fantasy</button>
       <button class="nav-btn" data-page="predict">🔮 Predict</button>
     </div>
   </nav>
@@ -37,7 +37,7 @@
           <div class="hstat"><span>12</span><small>Groups</small></div>
           <div class="hstat"><span>3</span><small>Host Nations</small></div>
         </div>
-        <button class="cta-btn" data-page="players">Explore Players</button>
+        <button class="cta-btn" data-page="schedule">View Schedule</button>
       </div>
       <div class="hero-potm">
         <div class="hero-potm-label">🏅 Golden Ball — Last 3 Tournaments</div>
@@ -76,27 +76,6 @@
       </div><!-- end hero-potm -->
     </div><!-- end hero -->
 
-    <section class="section">
-      <h2 class="section-title">Host Cities</h2>
-      <div class="cities-grid">
-        <div class="city-card usa">🇺🇸<span>New York</span></div>
-        <div class="city-card usa">🇺🇸<span>Los Angeles</span></div>
-        <div class="city-card usa">🇺🇸<span>Dallas</span></div>
-        <div class="city-card usa">🇺🇸<span>San Francisco</span></div>
-        <div class="city-card usa">🇺🇸<span>Miami</span></div>
-        <div class="city-card usa">🇺🇸<span>Seattle</span></div>
-        <div class="city-card usa">🇺🇸<span>Boston</span></div>
-        <div class="city-card usa">🇺🇸<span>Kansas City</span></div>
-        <div class="city-card usa">🇺🇸<span>Atlanta</span></div>
-        <div class="city-card usa">🇺🇸<span>Philadelphia</span></div>
-        <div class="city-card can">🇨🇦<span>Toronto</span></div>
-        <div class="city-card can">🇨🇦<span>Vancouver</span></div>
-        <div class="city-card mex">🇲🇽<span>Mexico City</span></div>
-        <div class="city-card mex">🇲🇽<span>Guadalajara</span></div>
-        <div class="city-card mex">🇲🇽<span>Monterrey</span></div>
-        <div class="city-card usa">🇺🇸<span>Houston</span></div>
-      </div>
-    </section>
   </div>
 
   <!-- TEAMS -->
@@ -129,12 +108,6 @@
     <div class="players-grid" id="players-grid"></div>
   </div>
 
-  <!-- GROUPS -->
-  <div id="page-groups" class="page">
-    <div class="page-header"><h2>Group Stage — 2026</h2></div>
-    <div class="groups-container" id="groups-container"></div>
-  </div>
-
   <!-- BRACKET -->
   <div id="page-bracket" class="page">
     <div class="page-header bracket-header">
@@ -147,6 +120,41 @@
     <div class="bracket-rounds-label" id="rounds-label"></div>
     <div class="bracket-wrap" id="bracket-wrap"></div>
     <div id="champion-banner" class="champion-banner hidden"></div>
+  </div>
+
+  <!-- FANTASY -->
+  <div id="page-fantasy" class="page">
+    <div class="page-header">
+      <h2>⚽ Fantasy Team Builder</h2>
+      <p style="color:var(--muted);font-size:0.9rem;margin-top:0.3rem">Pick your ultimate XI from WC 2026</p>
+    </div>
+    <div class="fantasy-controls">
+      <input class="fantasy-name-input" id="fantasy-team-name" placeholder="Your Team Name..." maxlength="30" />
+      <select class="filter-select" id="fantasy-formation">
+        <option value="4-3-3">4-3-3</option>
+        <option value="4-4-2">4-4-2</option>
+        <option value="3-5-2">3-5-2</option>
+        <option value="4-2-4">4-2-4</option>
+      </select>
+      <div class="fantasy-overall-wrap">
+        <span id="fantasy-overall">—</span>
+        <small>Overall</small>
+      </div>
+      <button class="fantasy-share-btn" id="fantasy-share">📋 Copy Lineup</button>
+      <button class="fantasy-reset-btn" id="fantasy-reset">↺ Reset</button>
+    </div>
+    <div class="fantasy-main">
+      <div class="fantasy-pitch" id="fantasy-pitch"></div>
+      <div class="fantasy-pool">
+        <div class="pool-tabs" id="pool-tabs">
+          <button class="pool-tab active" data-pos="GK">GK</button>
+          <button class="pool-tab" data-pos="DEF">DEF</button>
+          <button class="pool-tab" data-pos="MID">MID</button>
+          <button class="pool-tab" data-pos="FWD">FWD</button>
+        </div>
+        <div class="pool-list" id="pool-list"></div>
+      </div>
+    </div>
   </div>
 
   <!-- SCHEDULE -->
@@ -275,6 +283,9 @@
       </div>
     </div>
   </div>
+<div id="profile-modal" class="modal">
+
+</div>
 
   <script src="data.js"></script>
   <script src="app.js"></script>

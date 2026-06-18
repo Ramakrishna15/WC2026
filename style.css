@@ -334,6 +334,12 @@ body {
   border-radius: 6px;
   margin-top: 0.4rem;
 }
+.team-card .t-fifa-rank {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-top: 0.3rem;
+}
 .team-card .t-group {
   font-size: 0.75rem;
   color: var(--accent);
@@ -895,6 +901,217 @@ body {
 }
 .champ-flag { font-size: 4rem; margin-bottom: 0.3rem; }
 .champ-name { font-size: 2rem; font-weight: 900; }
+
+/* ---- FANTASY PAGE ---- */
+.fantasy-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.fantasy-name-input {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 0.9rem;
+  padding: 0.6rem 1rem;
+  width: 200px;
+}
+.fantasy-name-input:focus { outline: none; border-color: var(--accent); }
+
+.fantasy-overall-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.4rem 1rem;
+  min-width: 70px;
+}
+.fantasy-overall-wrap span { font-size: 1.2rem; font-weight: 900; color: var(--accent); }
+.fantasy-overall-wrap small { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; }
+
+.fantasy-share-btn {
+  background: linear-gradient(135deg, var(--accent), #e8901a);
+  border: none; border-radius: 10px;
+  color: #0a0e1a; font-size: 0.82rem; font-weight: 800;
+  padding: 0.6rem 1.1rem; cursor: pointer;
+  transition: transform 0.15s;
+}
+.fantasy-share-btn:hover { transform: scale(1.04); }
+
+.fantasy-reset-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border); border-radius: 10px;
+  color: var(--muted); font-size: 0.82rem; font-weight: 700;
+  padding: 0.6rem 1rem; cursor: pointer;
+  transition: border-color 0.15s;
+}
+.fantasy-reset-btn:hover { border-color: #ff6b6b; color: #ff6b6b; }
+
+.fantasy-main {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Pitch */
+.fantasy-pitch {
+  background: repeating-linear-gradient(180deg, #1e7a35 0px, #1e7a35 44px, #196b2e 44px, #196b2e 88px);
+  border-radius: 16px;
+  border: 3px solid rgba(255,255,255,0.2);
+  padding: 1.2rem 1rem;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.8rem;
+  position: relative;
+  min-height: 500px;
+}
+.fantasy-pitch::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px; height: 100px;
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.fantasy-pitch::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 10%; right: 10%;
+  height: 2px;
+  background: rgba(255,255,255,0.12);
+  pointer-events: none;
+}
+
+.pitch-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.pitch-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  width: 72px;
+  transition: transform 0.15s;
+}
+.pitch-slot:hover { transform: scale(1.08); }
+
+.slot-circle {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.35);
+  border: 2px dashed rgba(255,255,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  overflow: hidden;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+}
+.slot-circle img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top;
+}
+.slot-circle.filled { border: 2px solid var(--accent); background: rgba(0,0,0,0.5); }
+.slot-circle.active-slot { border: 2px solid #00d4ff; box-shadow: 0 0 12px rgba(0,212,255,0.5); }
+
+.slot-name {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slot-pos-badge {
+  font-size: 0.55rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.6);
+}
+
+/* Player pool */
+.fantasy-pool {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.pool-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--border);
+}
+.pool-tab {
+  background: none; border: none;
+  color: var(--muted); font-size: 0.78rem; font-weight: 700;
+  padding: 0.7rem; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+.pool-tab:hover { color: var(--text); }
+.pool-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.pool-list {
+  max-height: 460px;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+.pool-list::-webkit-scrollbar { width: 4px; }
+.pool-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.pool-player {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.6rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: 1px solid transparent;
+}
+.pool-player:hover { background: rgba(255,255,255,0.06); }
+.pool-player.selected { opacity: 0.35; pointer-events: none; }
+.pool-player.pool-active { border-color: var(--accent); background: rgba(245,166,35,0.08); }
+
+.pool-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%; overflow: hidden;
+  background: rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; flex-shrink: 0;
+}
+.pool-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+
+.pool-info { flex: 1; min-width: 0; }
+.pool-pname { font-size: 0.8rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pool-pteam { font-size: 0.68rem; color: var(--muted); }
+.pool-rating {
+  font-size: 0.75rem; font-weight: 800;
+  color: var(--accent);
+  background: rgba(245,166,35,0.1);
+  padding: 0.15rem 0.45rem; border-radius: 6px;
+}
+
+.pool-empty { color: var(--muted); font-size: 0.82rem; padding: 1.5rem; text-align: center; }
+
+@media (max-width: 700px) {
+  .fantasy-main { grid-template-columns: 1fr; }
+  .fantasy-pool { order: -1; }
+}
 
 /* ---- SCHEDULE PAGE ---- */
 .sched-filters {
