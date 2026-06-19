@@ -406,7 +406,7 @@ teamFilter.addEventListener('change', filterPlayers);
 
 // ---- SCHEDULE ----
 (function() {
-  const TODAY = new Date('2026-06-17');
+  const TODAY = new Date('2026-06-18');
 
   function matchStatus(dateStr) {
     const d = new Date(dateStr);
@@ -489,6 +489,11 @@ teamFilter.addEventListener('change', filterPlayers);
     'Iraq|Norway':                [1, 4],
     'Argentina|Algeria':          [3, 0],
     'Austria|Jordan':             [3, 1],
+    // June 17 — Groups K & L
+    'Portugal|DR Congo':          [1, 1],
+    'Colombia|Uzbekistan':        [3, 1],
+    'England|Croatia':            [4, 2],
+    'Ghana|Panama':               [1, 0],
   };
 
   // Populate group filter
