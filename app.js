@@ -406,7 +406,7 @@ teamFilter.addEventListener('change', filterPlayers);
 
 // ---- SCHEDULE ----
 (function() {
-  const TODAY = new Date('2026-06-18');
+  const TODAY = new Date('2026-06-19');
 
   function matchStatus(dateStr) {
     const d = new Date(dateStr);
@@ -494,6 +494,11 @@ teamFilter.addEventListener('change', filterPlayers);
     'Colombia|Uzbekistan':        [3, 1],
     'England|Croatia':            [4, 2],
     'Ghana|Panama':               [1, 0],
+    // June 18 — Groups A & B (Matchday 2)
+    'Czech Republic|South Africa':[1, 1],
+    'Mexico|South Korea':         [1, 0],
+    'Switzerland|Bosnia & Herzegovina': [4, 1],
+    'Canada|Qatar':               [6, 0],
   };
 
   // Populate group filter
