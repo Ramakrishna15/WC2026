@@ -466,7 +466,7 @@ teamFilter.addEventListener('change', filterPlayers);
 
 // ---- SCHEDULE ----
 (function() {
-  const TODAY = new Date('2026-06-21');
+  const TODAY = new Date('2026-06-22');
 
   function matchStatus(dateStr) {
     const d = new Date(dateStr);
@@ -574,6 +574,11 @@ teamFilter.addEventListener('change', filterPlayers);
     'Paraguay|Turkey':            [1, 2],
     'Argentina|Austria':          [2, 0],
     'Algeria|Jordan':             [1, 0],
+    // June 22 — Groups E & K (Matchday 2)
+    'Germany|Côte d\'Ivoire':     [3, 1],
+    'Curaçao|Ecuador':            [0, 2],
+    'Portugal|Uzbekistan':        [4, 0],
+    'DR Congo|Colombia':          [0, 2],
   };
 
   // Populate group filter
