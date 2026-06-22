@@ -557,13 +557,9 @@ teamFilter.addEventListener('change', filterPlayers);
     // June 18 — Groups A & G (Matchday 2)
     'Czech Republic|South Africa':[1, 1],
     'Mexico|South Korea':         [1, 0],
-    'Belgium|Iran':               [2, 0],
-    'Egypt|New Zealand':          [1, 0],
-    // June 19 — Groups B & H (Matchday 2)
+    // June 19 — Groups B (Matchday 2)
     'Switzerland|Bosnia & Herzegovina': [4, 1],
     'Canada|Qatar':               [6, 0],
-    'Spain|Saudi Arabia':         [3, 0],
-    'Cape Verde|Uruguay':         [0, 2],
     // June 20 — Groups C & I (Matchday 2)
     'Brazil|Haiti':               [4, 0],
     'Morocco|Scotland':           [1, 0],
@@ -574,11 +570,15 @@ teamFilter.addEventListener('change', filterPlayers);
     'Paraguay|Turkey':            [1, 2],
     'Argentina|Austria':          [2, 0],
     'Algeria|Jordan':             [1, 0],
-    // June 22 — Groups E & K (Matchday 2)
-    'Germany|Côte d\'Ivoire':     [3, 1],
-    'Curaçao|Ecuador':            [0, 2],
-    'Portugal|Uzbekistan':        [4, 0],
-    'DR Congo|Colombia':          [0, 2],
+    // June 21 — Groups E & F (Matchday 2)
+    'Germany|Côte d\'Ivoire':     [2, 1],
+    'Curaçao|Ecuador':            [0, 0],
+    'Japan|Tunisia':              [4, 0],
+    // June 22 — Groups G & H (Matchday 2)
+    'Belgium|Iran':               [0, 0],
+    'Egypt|New Zealand':          [3, 1],
+    'Spain|Saudi Arabia':         [4, 0],
+    'Cape Verde|Uruguay':         [2, 2],
   };
 
   // Populate group filter
