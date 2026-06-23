@@ -567,7 +567,7 @@ teamFilter.addEventListener('change', filterPlayers);
     'Paraguay|Turkey':            [1, 0],
     'Netherlands|Sweden':         [5, 1],
     'France|Iraq':                [3, 0],
-    'Senegal|Norway':             [1, 4],
+    'Senegal|Norway':             [2, 3],
     // June 22-23 — Groups J (Matchday 2)
     'Argentina|Austria':          [2, 0],
     'Algeria|Jordan':             [2, 1],
